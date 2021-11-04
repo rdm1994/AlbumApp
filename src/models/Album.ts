@@ -3,5 +3,5 @@ export interface Album {
   pId?: string;
   name: string;
   tag?: string;
-  sharedEmails: [string];
+  sharedEmails: string[];
 }

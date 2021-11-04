@@ -38,7 +38,7 @@ export const Filter: FunctionComponent = () => {
     <div className="flex flex-1 items-center space-x-[12px]">
       <div className="flex flex-grow items-center space-x-[8px]">
         <label className={classes.label}>Album name:</label>
-        <input className={classes.input} value={filter.albumName} onChange={handleAlbumNameChanged} />
+        <input className={classes.input} value={filter.albumName ?? ''} onChange={handleAlbumNameChanged} />
       </div>
 
       <div className="flex items-center space-x-[8px]">
@@ -64,12 +64,12 @@ export const Filter: FunctionComponent = () => {
 
       <div className="flex flex-grow items-center space-x-[8px]">
         <label className={classes.label}>Tag:</label>
-        <input className={classes.input} value={filter.tag} onChange={handleTagChanged} />
+        <input className={classes.input} value={filter.tag ?? ''} onChange={handleTagChanged} />
       </div>
 
       <div className="flex flex-grow items-center space-x-[8px]">
         <label className={classes.label}>Email:</label>
-        <input className={classes.input} value={filter.email} onChange={handleEmailChanged} />
+        <input className={classes.input} value={filter.email ?? ''} onChange={handleEmailChanged} />
       </div>
 
       <Button onClick={resetFilter}>Reset</Button>

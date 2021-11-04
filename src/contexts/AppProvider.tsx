@@ -1,7 +1,9 @@
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
-import { AppContext, DataInterface, FilterInterface } from 'contexts/AppContext';
-import differenceInDays from 'date-fns/differenceInDays';
+import { AppContext, DataInterface, ExplorerItem, FilterInterface } from 'contexts/AppContext';
+import { differenceInDays, parseISO } from 'date-fns';
+import { default as json } from 'fake/data.json';
 import { Album, Picture } from 'models';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface AppProviderProps {
   children: ReactNode;
@@ -10,6 +12,7 @@ export interface AppProviderProps {
 export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) => {
   const [rootAlbum, setRootAlbum] = useState<Album | undefined>();
   const [parentAlbum, setParentAlbum] = useState<Album | undefined>();
+  const [selectedItem, setSelectedItem] = useState<ExplorerItem | undefined>();
   const [data, setData] = useState<DataInterface>({ albums: [], pictures: [] });
   const [visibleData, setVisibleData] = useState<DataInterface>({ albums: [], pictures: [] });
   const [filter, setFilter] = useState<FilterInterface>({});
@@ -19,7 +22,21 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
     setRootAlbum(album);
   };
 
-  const move = (item: Album | Picture, album?: Album): void => {
+  const createAlbum = (name: string): void => {
+    const newAlbum: Album = {
+      id: uuidv4(),
+      pId: rootAlbum?.id,
+      name,
+      sharedEmails: [],
+    };
+
+    setData((prev) => ({
+      ...prev,
+      albums: [...prev.albums, newAlbum],
+    }));
+  };
+
+  const move = (item: ExplorerItem, album?: Album): void => {
     setData((prev) => {
       const next = { ...prev };
       const isPicture = 'createdAt' in item;
@@ -38,7 +55,7 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
     });
   };
 
-  const share = (item: Picture | Album, email: string): void => {
+  const share = (item: ExplorerItem, email: string): void => {
     if (item.sharedEmails.includes(email)) {
       return;
     }
@@ -59,6 +76,10 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
       }
       return next;
     });
+  };
+
+  const select = (item: ExplorerItem): void => {
+    setSelectedItem(item);
   };
 
   const updateFilter = (filter: FilterInterface): void => {
@@ -119,6 +140,20 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
     }
   }, [data, filter, isFiltering]);
 
+  useEffect(() => {
+    setData({
+      albums: [],
+      pictures: json.pictures.map(
+        (item) =>
+          ({
+            ...item,
+            createdAt: parseISO(item.createdAt),
+            sharedEmails: [],
+          } as Picture),
+      ),
+    });
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -126,12 +161,15 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
         parentAlbum,
         data,
         visibleData,
+        selectedItem,
         filter,
         isFiltering,
         filteredPictures,
+        createAlbum,
         open,
         move,
         share,
+        select,
         updateFilter,
         resetFilter,
       }}
