@@ -38,7 +38,7 @@ export const Modal: FunctionComponent<ModalProps> = ({
     backdrop: 'z-[-1] absolute left-0 top-0 w-full h-full bg-black/30',
     dialog:
       'relative shadow p-[16px] min-w-[240px] max-w-[80%] min-h-[120px] max-h-[80%] bg-white rounded flex flex-col items-stretch',
-    titleBar: 'mb-[12px] flex justify-between space-x-[8px] font-semibold text-[24px]',
+    titleBar: 'mb-[12px] flex justify-between items-center space-x-[8px] font-semibold text-[18px]',
     content: 'overflow-x-hidden overflow-y-auto',
     buttonBar: 'mt-[24px] flex justify-end space-x-[8px]',
   };
@@ -61,8 +61,8 @@ export const Modal: FunctionComponent<ModalProps> = ({
         {title && (
           <div className={classes.titleBar}>
             <span>{title}</span>
-            <button className="p-[8px]" onClick={onClose}>
-              <CloseIcon width={20} height={20} />
+            <button className="p-[8px] pr-0" onClick={onClose}>
+              <CloseIcon width={16} height={16} />
             </button>
           </div>
         )}
@@ -70,13 +70,11 @@ export const Modal: FunctionComponent<ModalProps> = ({
         <div className={classes.content}>{children}</div>
 
         <div className={classes.buttonBar}>
-          <Button className="min-w-[64px]" onClick={onOkay}>
-            {' '}
-            Okay{' '}
+          <Button className="min-w-[64px]" onClick={onOkay ?? onClose}>
+            Okay
           </Button>
-          <Button className="min-w-[64px]" onClick={onOkay}>
-            {' '}
-            Cancel{' '}
+          <Button className="min-w-[64px]" onClick={onClose}>
+            Cancel
           </Button>
         </div>
       </div>

@@ -8,7 +8,7 @@ import { useDimension } from 'hooks';
 const ITEM_SIZE = 175;
 
 export const Browser: FunctionComponent = () => {
-  const { rootAlbum, parentAlbum, visibleData, selectedItem } = useContext(AppContext);
+  const { parentAlbum, visibleData, selectedItem } = useContext(AppContext);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { clientWidth, clientHeight } = useDimension(wrapperRef?.current);
@@ -37,7 +37,11 @@ export const Browser: FunctionComponent = () => {
           <div className={classes.container}>
             {parentAlbum && <AlbumView album={parentAlbum} />}
             {visibleData.albums.map((item) => (
-              <AlbumView key={item.id} album={item} />
+              <AlbumView
+                key={item.id}
+                album={item}
+                selected={selectedItem && !('createdAt' in selectedItem) && selectedItem.id === item.id}
+              />
             ))}
             {visibleData.pictures.map((item) => (
               <PictureView

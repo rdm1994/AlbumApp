@@ -1,5 +1,6 @@
-import React, { FunctionComponent, HTMLAttributes, useRef } from 'react';
+import React, { FunctionComponent, HTMLAttributes, useContext, useRef } from 'react';
 import clsx from 'clsx';
+import { AppContext } from 'contexts/AppContext';
 import { format } from 'date-fns';
 import { useDimension } from 'hooks';
 import { Picture } from 'models';
@@ -11,6 +12,8 @@ export interface PictureViewProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const PictureView: FunctionComponent<PictureViewProps> = ({ selected, picture }) => {
+  const { select } = useContext(AppContext);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { clientWidth } = useDimension(wrapperRef?.current);
 
@@ -24,8 +27,16 @@ export const PictureView: FunctionComponent<PictureViewProps> = ({ selected, pic
     label: 'absolute text-[12px] bottom-[4px] left-1/2 transform -translate-x-1/2',
   };
 
+  const handleSelect = () => {
+    if (selected) {
+      select();
+    } else {
+      select(picture);
+    }
+  };
+
   return (
-    <div ref={wrapperRef}>
+    <div ref={wrapperRef} onClick={handleSelect}>
       {clientWidth > 0 && (
         <div className={classes.wrapper} style={{ width: clientWidth, height: clientWidth }}>
           <div className={classes.picture}>

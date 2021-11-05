@@ -28,7 +28,7 @@ export interface AppContextProps {
   open: (album?: Album) => void;
   move: (picture: ExplorerItem, album?: Album) => void;
   share: (item: ExplorerItem, email: string) => void;
-  select: (item: ExplorerItem) => void;
+  select: (item?: ExplorerItem) => void;
   updateFilter: (filter: FilterInterface) => void;
   resetFilter: () => void;
 }

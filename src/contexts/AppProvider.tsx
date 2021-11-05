@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import { AppContext, DataInterface, ExplorerItem, FilterInterface } from 'contexts/AppContext';
 import { differenceInDays, parseISO } from 'date-fns';
-import { default as json } from 'fake/data.json';
+import { default as json } from 'json/data.json';
 import { Album, Picture } from 'models';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -78,7 +78,7 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
     });
   };
 
-  const select = (item: ExplorerItem): void => {
+  const select = (item?: ExplorerItem): void => {
     setSelectedItem(item);
   };
 
