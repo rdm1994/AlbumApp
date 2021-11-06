@@ -36,7 +36,7 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
     }));
   };
 
-  const move = (item: ExplorerItem, album?: Album): void => {
+  const assignAlbum = (item: ExplorerItem, album?: Album): void => {
     setData((prev) => {
       const next = { ...prev };
       const isPicture = 'createdAt' in item;
@@ -72,6 +72,48 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
         const match = next.albums.findIndex((i) => i.id === item.id);
         if (match >= 0) {
           next.albums[match].sharedEmails.push(email);
+        }
+      }
+      return next;
+    });
+  };
+
+  const unshare = (item: ExplorerItem, email: string): void => {
+    if (!item.sharedEmails.includes(email)) {
+      return;
+    }
+
+    setData((prev) => {
+      const next = { ...prev };
+      const isPicture = 'createdAt' in item;
+      if (isPicture) {
+        const match = next.pictures.findIndex((i) => i.id === item.id);
+        if (match >= 0) {
+          next.pictures[match].sharedEmails = [...next.pictures[match].sharedEmails].filter((i) => i !== email);
+        }
+      } else {
+        const match = next.albums.findIndex((i) => i.id === item.id);
+        if (match >= 0) {
+          next.albums[match].sharedEmails = [...next.albums[match].sharedEmails].filter((i) => i !== email);
+        }
+      }
+      return next;
+    });
+  };
+
+  const setTag = (item: ExplorerItem, tag: string) => {
+    setData((prev) => {
+      const next = { ...prev };
+      const isPicture = 'createdAt' in item;
+      if (isPicture) {
+        const match = next.pictures.findIndex((i) => i.id === item.id);
+        if (match >= 0) {
+          next.pictures[match].tag = tag;
+        }
+      } else {
+        const match = next.albums.findIndex((i) => i.id === item.id);
+        if (match >= 0) {
+          next.albums[match].tag = tag;
         }
       }
       return next;
@@ -167,8 +209,10 @@ export const AppProvider: FunctionComponent<AppProviderProps> = ({ children }) =
         filteredPictures,
         createAlbum,
         open,
-        move,
+        assignAlbum,
         share,
+        unshare,
+        setTag,
         select,
         updateFilter,
         resetFilter,

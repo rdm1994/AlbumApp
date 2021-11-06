@@ -1,14 +1,13 @@
 import React, { FunctionComponent, useContext, useRef } from 'react';
 import clsx from 'clsx';
-import { AlbumView } from 'components/album';
-import { PictureView } from 'components/picture';
+import { BrowserItem } from 'components/browser';
 import { AppContext } from 'contexts/AppContext';
 import { useDimension } from 'hooks';
 
 const ITEM_SIZE = 175;
 
 export const Browser: FunctionComponent = () => {
-  const { parentAlbum, visibleData, selectedItem } = useContext(AppContext);
+  const { rootAlbum, parentAlbum, visibleData, selectedItem, isFiltering, filteredPictures } = useContext(AppContext);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { clientWidth, clientHeight } = useDimension(wrapperRef?.current);
@@ -35,21 +34,33 @@ export const Browser: FunctionComponent = () => {
       {clientHeight > 0 && (
         <div className={classes.wrapper} style={{ height: clientHeight, maxHeight: clientHeight }}>
           <div className={classes.container}>
-            {parentAlbum && <AlbumView album={parentAlbum} />}
-            {visibleData.albums.map((item) => (
-              <AlbumView
-                key={item.id}
-                album={item}
-                selected={selectedItem && !('createdAt' in selectedItem) && selectedItem.id === item.id}
-              />
-            ))}
-            {visibleData.pictures.map((item) => (
-              <PictureView
-                key={item.id}
-                picture={item}
-                selected={selectedItem && 'createdAt' in selectedItem && selectedItem.id === item.id}
-              />
-            ))}
+            {isFiltering &&
+              (filteredPictures.length === 0
+                ? 'No matching'
+                : filteredPictures.map((item) => (
+                    <BrowserItem
+                      key={item.id}
+                      item={item}
+                      selected={selectedItem && 'createdAt' in selectedItem && selectedItem.id === item.id}
+                    />
+                  )))}
+            {!isFiltering && (parentAlbum || rootAlbum) && <BrowserItem item={parentAlbum} isUp />}
+            {!isFiltering &&
+              visibleData.albums.map((item) => (
+                <BrowserItem
+                  key={item.id}
+                  item={item}
+                  selected={selectedItem && !('createdAt' in selectedItem) && selectedItem.id === item.id}
+                />
+              ))}
+            {!isFiltering &&
+              visibleData.pictures.map((item) => (
+                <BrowserItem
+                  key={item.id}
+                  item={item}
+                  selected={selectedItem && 'createdAt' in selectedItem && selectedItem.id === item.id}
+                />
+              ))}
           </div>
         </div>
       )}

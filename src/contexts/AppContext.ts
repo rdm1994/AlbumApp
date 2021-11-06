@@ -26,8 +26,10 @@ export interface AppContextProps {
   filteredPictures: Picture[];
   createAlbum: (name: string) => void;
   open: (album?: Album) => void;
-  move: (picture: ExplorerItem, album?: Album) => void;
+  assignAlbum: (item: ExplorerItem, album?: Album) => void;
   share: (item: ExplorerItem, email: string) => void;
+  unshare: (item: ExplorerItem, email: string) => void;
+  setTag: (item: ExplorerItem, tag: string) => void;
   select: (item?: ExplorerItem) => void;
   updateFilter: (filter: FilterInterface) => void;
   resetFilter: () => void;
@@ -40,8 +42,10 @@ export const AppContext = createContext<AppContextProps>({
   filteredPictures: [],
   createAlbum: () => null,
   open: () => null,
-  move: () => null,
+  assignAlbum: () => null,
   share: () => null,
+  unshare: () => null,
+  setTag: () => null,
   select: () => null,
   updateFilter: () => null,
   resetFilter: () => null,
