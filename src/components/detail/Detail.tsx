@@ -66,10 +66,10 @@ export const Detail: FunctionComponent = () => {
       <div className="space-y-[4px]">
         <p>Shared by emails</p>
         {selectedItem.sharedEmails.map((item) => (
-          <div key={item} className="flex items-center">
+          <div key={item} className="flex items-center text-[14px]">
             <p className="flex-1">{item}</p>
             <button className="p-[8px] pr-0" onClick={handleUnshare(item)}>
-              <CloseIcon width={16} height={16} />
+              <CloseIcon width={12} height={12} />
             </button>
           </div>
         ))}
